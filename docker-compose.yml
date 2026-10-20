@@ -11,12 +11,19 @@ services:
 
   api:
     build: ./api
-    ports:
-      - "3000:3000"
     environment:
       MONGO_URL: mongodb://mongo:27017/cloudnotes
     depends_on:
       mongo:
+        condition: service_healthy
+    restart: unless-stopped
+
+  web:
+    build: ./web
+    ports:
+      - "8080:80"
+    depends_on:
+      api:
         condition: service_healthy
     restart: unless-stopped
 
